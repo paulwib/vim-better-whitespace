@@ -121,6 +121,10 @@ function! s:ShouldHighlight()
     " Guess from the filetype if a) not locally decided, b) globally enabled, c) there is enough information
     if !exists('b:better_whitespace_enabled') && g:better_whitespace_enabled == 1 && !(empty(&buftype) && empty(&filetype))
         let b:better_whitespace_enabled = &buftype != 'nofile' && &buftype != 'popup' && index(g:better_whitespace_filetypes_blacklist, &ft) == -1
+    " Never show whitespace in preview windows - they always have empty
+    " &buftype and empty &filetype so this is a separate branch
+    elseif &pvw
+        let b:better_whitespace_enabled = 0
     endif
     return get(b:, 'better_whitespace_enabled', g:better_whitespace_enabled)
 endfunction
